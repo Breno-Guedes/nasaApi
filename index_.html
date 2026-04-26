@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Imagens da NASA</title>
+    <link rel="stylesheet" href="style_.css">
+</head>
+<body>
+
+<h2>Imagens da NASA</h2>
+
+<form method="get">
+    <input type="text" name="search" placeholder="Pesquisar ID" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+    <button type="submit">Pesquisar</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Imagem</th>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Data</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (count($itensPagina) > 0): ?>
+            <?php foreach ($itensPagina as $item): 
+                $data = $item['data'][0] ?? [];
+                $imgUrl = $item['links'][0]['href'] ?? '';
+            ?>
+            <tr>
+                <td><?= htmlspecialchars($data['nasa_id'] ?? '') ?></td>
+                <td>
+                    <?php if ($imgUrl): ?>
+                        <img class="imagem" src="<?= htmlspecialchars($imgUrl) ?>">
+                    <?php else: ?>
+                        Sem imagem
+                    <?php endif; ?>
+                </td>
+                <td><?= htmlspecialchars($data['title'] ?? '') ?></td>
+                <td class="descricao"><?= htmlspecialchars($data['description'] ?? '') ?></td>
+                <td><?= !empty($data['date_created']) ? date('d/m/Y', strtotime($data['date_created'])) : '' ?></td>
+            </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="5">Nenhuma imagem encontrada.</td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
+
+<p>
+    Página <?= $paginaAtual ?> de <?= $totalPaginas ?> <br>
+    Exibindo <?= count($itensPagina) ?> de <?= $totalItens ?>
+</p>
+
+<div>
+    <?php 
+    // Mantendo os parâmetros de busca na URL da paginação
+    $buscaParam = isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : '';
+    ?>
+
+    <?php if ($paginaAtual > 1): ?>
+        <a href="?page=1<?= $buscaParam ?>">Início</a>
+        <a href="?page=<?= $paginaAtual - 1 ?><?= $buscaParam ?>">Anterior</a>
+    <?php endif; ?>
+
+    <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
+        <a href="?page=<?= $i ?><?= $buscaParam ?>"><?= $i ?></a>
+    <?php endfor; ?>
+
+    <?php if ($paginaAtual < $totalPaginas): ?>
+        <a href="?page=<?= $paginaAtual + 1 ?><?= $buscaParam ?>">Próxima</a>
+        <a href="?page=<?= $totalPaginas ?><?= $buscaParam ?>">Última</a>
+    <?php endif; ?>
+</div>
+
+</body>
+</html>
