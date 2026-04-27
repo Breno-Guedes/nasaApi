@@ -24,58 +24,121 @@
             <th>Data</th>
         </tr>
     </thead>
-    <tbody>
-        <?php if (count($itensPagina) > 0): ?>
-            <?php foreach ($itensPagina as $item): 
-                $data = $item['data'][0] ?? [];
-                $imgUrl = $item['links'][0]['href'] ?? '';
+   <tbody>
+        <?php if (count($itensPagina) > 0) { ?>
+
+            <?php foreach ($itensPagina as $item) { 
+        
+        
+            if (isset($item['data'][0])) {
+                $data = $item['data'][0];
+            } else {
+                $data = [];
+            }
+
+    
+            if (isset($item['links'][0]['href'])) {
+                $imgUrl = $item['links'][0]['href'];
+            } else {
+                $imgUrl = '';
+            }
+
+            if (!empty($data['date_created'])) {
+                $dataFormatada = date('d/m/Y', strtotime($data['date_created']));
+            } else {
+                $dataFormatada = '';
+            }
+        ?>
+    
+    <tr>
+        <td>
+            <?php 
+            if (isset($data['nasa_id'])) {
+                echo htmlspecialchars($data['nasa_id']);
+            } else {
+                echo '';
+            }
             ?>
-            <tr>
-                <td><?= htmlspecialchars($data['nasa_id'] ?? '') ?></td>
-                <td>
-                    <?php if ($imgUrl): ?>
-                        <img class="imagem" src="<?= htmlspecialchars($imgUrl) ?>">
-                    <?php else: ?>
-                        Sem imagem
-                    <?php endif; ?>
-                </td>
-                <td><?= htmlspecialchars($data['title'] ?? '') ?></td>
-                <td class="descricao"><?= htmlspecialchars($data['description'] ?? '') ?></td>
-                <td><?= !empty($data['date_created']) ? date('d/m/Y', strtotime($data['date_created'])) : '' ?></td>
-            </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <tr>
-                <td colspan="5">Nenhuma imagem encontrada.</td>
-            </tr>
-        <?php endif; ?>
-    </tbody>
+        </td>
+
+        <td>
+            <?php if (!empty($imgUrl)) { ?>
+                <a class="link-imagem" href="https://images.nasa.gov/details/<?php echo htmlspecialchars($data['nasa_id']); ?>" target="_blank">
+                    <img class="imagem" src="<?php echo htmlspecialchars($imgUrl); ?>">
+                </a>
+            <?php } else { ?>
+                Sem imagem
+            <?php } ?>
+        </td>
+
+        <td>
+            <?php 
+            if (isset($data['title'])) {
+                echo htmlspecialchars($data['title']);
+            } else {
+                echo '';
+            }
+            ?>
+        </td>
+
+        <td class="descricao">
+            <?php 
+            if (isset($data['description'])) {
+                echo htmlspecialchars($data['description']);
+            } else {
+                echo '';
+            }
+            ?>
+        </td>
+
+        <td><?php echo $dataFormatada; ?></td>
+    </tr>
+
+    <?php } ?>
+
+<?php } else { ?>
+
+    <tr>
+        <td colspan="5">Nenhuma imagem encontrada.</td>
+    </tr>
+
+<?php } ?>
+</tbody>
 </table>
 
 <p>
-    Página <?= $paginaAtual ?> de <?= $totalPaginas ?> <br>
-    Exibindo <?= count($itensPagina) ?> de <?= $totalItens ?>
+    <?php
+    echo "Página " . $paginaAtual . " de " . $totalPaginas;
+    echo "<br>";
+    echo "Exibindo " . count($itensPagina) . " de " . $totalItens;
+    ?>
 </p>
 
-<div>
+<div class="paginacao">
     <?php 
-    // Mantendo os parâmetros de busca na URL da paginação
-    $buscaParam = isset($_GET['search']) ? '&search=' . urlencode($_GET['search']) : '';
+    if (isset($_GET['search'])) {
+        $buscaParam = '&search=' . urlencode($_GET['search']);
+    } else {
+        $buscaParam = '';
+    }
     ?>
 
-    <?php if ($paginaAtual > 1): ?>
-        <a href="?page=1<?= $buscaParam ?>">Início</a>
-        <a href="?page=<?= $paginaAtual - 1 ?><?= $buscaParam ?>">Anterior</a>
-    <?php endif; ?>
+    <?php if ($paginaAtual > 1) { ?>
+        <a href="<?php echo '?page=1' . $buscaParam; ?>">Início</a>
+        <a href="<?php echo '?page=' . ($paginaAtual - 1) . $buscaParam; ?>">Anterior</a>
+    <?php } ?>
 
-    <?php for ($i = 1; $i <= $totalPaginas; $i++): ?>
-        <a href="?page=<?= $i ?><?= $buscaParam ?>"><?= $i ?></a>
-    <?php endfor; ?>
+    <?php 
+    for ($i = 1; $i <= $totalPaginas; $i++) { ?>
+        <a href="<?php echo '?page=' . $i . $buscaParam; ?>">
+            <?php echo $i; ?>
+        </a>
+    <?php } ?>
 
-    <?php if ($paginaAtual < $totalPaginas): ?>
-        <a href="?page=<?= $paginaAtual + 1 ?><?= $buscaParam ?>">Próxima</a>
-        <a href="?page=<?= $totalPaginas ?><?= $buscaParam ?>">Última</a>
-    <?php endif; ?>
+    <?php if ($paginaAtual < $totalPaginas) { ?>
+        <a href="<?php echo '?page=' . ($paginaAtual + 1) . $buscaParam; ?>">Próxima</a>
+        <a href="<?php echo '?page=' . $totalPaginas . $buscaParam; ?>">Última</a>
+    <?php } ?>
 </div>
 
 </body>

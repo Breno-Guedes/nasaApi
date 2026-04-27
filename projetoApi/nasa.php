@@ -1,8 +1,6 @@
 <?php
-// URL da API da NASA buscando pela palavra "galaxy"
 $url = 'https://images-api.nasa.gov/search?q=galaxy';
 
-// Opções para evitar problemas de SSL no XAMPP/WAMP
 $opcoes = [
     'http' => [
         'method' => 'GET',

@@ -119,13 +119,14 @@ input[type="text"] {
     border-radius: 4px;
 }
 
-a {
-    background-color: #007bff;
-    color: #ffffff;
+.paginacao a {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 5px; 
+    background: #007bff;
+    color: white;
     text-decoration: none;
-    border: 1px solid #007bff;
     border-radius: 4px;
-    padding: 5px 10px;  
 }
 
 .descricao {
@@ -139,4 +140,11 @@ a {
 .imagem {
    border-radius: 10px;
    max-width:150px;
+}
+
+.link-imagem {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    display: inline-block; 
 }
