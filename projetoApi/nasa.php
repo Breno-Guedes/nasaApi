@@ -1,4 +1,35 @@
 <?php
+if (isset($_GET['toggle_theme'])) {
+
+    if (isset($_COOKIE['theme'])) {
+        $current_theme = $_COOKIE['theme'];
+    } else {
+        $current_theme = 'light';
+    }
+
+    if ($current_theme === 'light') {
+        $new_theme = 'dark';
+    } else {
+        $new_theme = 'light';
+    }
+
+    setcookie('theme', $new_theme, time() + (86400 * 30), "/");
+
+    $params = $_GET;
+    unset($params['toggle_theme']);
+    $query = http_build_query($params);
+
+    $redirect_url = strtok($_SERVER["REQUEST_URI"], '?');
+
+    if ($query) {
+        header("Location: $redirect_url?$query");
+    } else {
+        header("Location: $redirect_url");
+    }
+
+    exit;
+}
+
 $url = 'https://images-api.nasa.gov/search?q=galaxy';
 
 $opcoes = [

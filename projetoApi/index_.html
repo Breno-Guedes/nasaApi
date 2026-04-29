@@ -1,3 +1,16 @@
+<?php 
+$theme = 'light';
+
+if (isset($_COOKIE['theme'])) {
+    $theme = $_COOKIE['theme'];
+}
+
+$bodyClass = '';
+
+if ($theme === 'dark') {
+    $bodyClass = 'dark-mode';
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,7 +18,30 @@
     <title>Imagens da NASA</title>
     <link rel="stylesheet" href="style_.css">
 </head>
-<body>
+<body class="<?php echo $bodyClass; ?>">
+
+<div class="stars"></div>
+<div class="twinkling"></div>
+
+<header>
+<?php
+    $toggleParams = $_GET;
+    $toggleParams['toggle_theme'] = 1;
+    $toggleUrl = '?' . http_build_query($toggleParams);
+
+    $buttonText = '';
+
+    if ($theme === 'light') {
+        $buttonText = 'Modo Escuro';
+    } else {
+        $buttonText = 'Modo Claro';
+    }
+?>
+
+    <a href="<?php echo htmlspecialchars($toggleUrl); ?>" class="theme-btn">
+        <?php echo $buttonText; ?>
+    </a>
+</header>
 
 <h2>Imagens da NASA</h2>
 
@@ -140,6 +176,10 @@
         <a href="<?php echo '?page=' . $totalPaginas . $buscaParam; ?>">Última</a>
     <?php } ?>
 </div>
+
+<footer>
+    <p>&copy 2026 | Desenvolvido por <strong>Breno de Souza Guedes</strong></p>
+</footer>
 
 </body>
 </html>
