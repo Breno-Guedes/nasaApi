@@ -85,5 +85,5 @@ $paginaAtual = max(1, min($paginaAtual, $totalPaginas));
 $inicio = ($paginaAtual - 1) * $itensPorPagina;
 $itensPagina = array_slice($todosItens, $inicio, $itensPorPagina);
 
-include 'index_.html';
+include 'index.html';
 ?>
